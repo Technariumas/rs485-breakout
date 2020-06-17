@@ -1,18 +1,26 @@
-# rs485-breakout
-A tiny development board to quickly prototype RS485/Modbus devices
+# rs485 valve controller
 
-When building RS485/Modbus networks I have identified a need for a platform that would allow me to put various additional sensors or actuators on the network. Like relays to switch stuff, temperature, humidity sensors or other devices that don't have a native Modbus interface.
+Pins MISO and SCL on the 10 pin header are programmed as general purpose IO. Two least significant bits written to register 5 allows to control the state of these pins:
 
-This board allows interfacing to different digital busses or analog devices.
+```
+import minimalmodbus as mm
 
-## Features
+instrument = mm.Instrument(SERIAL_PORT, ADDRESS)
 
-* Robust RS485 interface
-* ESD protection
-* Extendable Modbus slave firmware
-* I2C interface
-* SPI interface
-* 2 analog inputs
-* PWM outputs
-* 2x5 0.1' prototyping area
-* Small form factor allowing PCB integration or inline integration into cable assembly
+print("Setting 00")
+instrument.write_register(5, 0b00000000, functioncode=6);
+sleep(0.1)
+
+print("Setting 01")
+instrument.write_register(5, 0b00000001, functioncode=6);
+sleep(0.1)
+
+print("Setting 10")
+instrument.write_register(5, 0b00000010, functioncode=6);
+sleep(0.1)
+
+print("Setting 11")
+instrument.write_register(5, 0b00000011, functioncode=6);
+
+```
+

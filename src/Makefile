@@ -9,9 +9,32 @@
 
 DEVICE  = attiny441
 F_CPU   = 16000000	# in Hz
-FUSE_L  = 0xAF# see below for fuse values for particular devices
-FUSE_H  = 0xDF
+
+
+# 10101111
+# 1 - CKDIV8 - no
+# 1 - CKOUT - no
+# 1 - 
+# 0 - SUT
+# 1111 - >8MHz
+FUSE_L  = 0xEF
+
+# 11011111
+# 1 - rst disable - no
+# 1 - debgwire - no
+# 0 - SPI enabled - yes
+# 1 - watchdog - off
+# 1 - eesave - no
+# 111 - BOD level - 2.7V
+FUSE_H  = 0xDD
+
+# 11101101
+#111 - freq selection, default
+#01 - BOD sleep mode: Sampled
+#10 - BOD active mode: Enabled
+#1 - Enables SPM instruction - no
 FUSE_E  = 0xED
+
 AVRDUDE = avrdude -c usbasp -P usb -p $(DEVICE) -e # edit this line for your programmer
 
 CFLAGS  = -Iusbdrv -I. -DDEBUG_LEVEL=0  -Os -std=gnu99
@@ -43,7 +66,7 @@ fuse:
 
 # rule for uploading firmware:
 flash: main.hex
-	$(AVRDUDE) -U flash:w:main.hex:i -U eeprom:w:main.eep:i #-B 20.92 
+	$(AVRDUDE) -U flash:w:main.hex:i #-U eeprom:w:main.eep:i #-B 20.92 
 sflash: main.hex
 	$(AVRDUDE) -U flash:w:main.hex:i -B 20.92
 # rule for deleting dependent files (those which can be built by Make):
