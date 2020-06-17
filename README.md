@@ -2,7 +2,7 @@
 
 Pins MISO and SCL on the 10 pin header are programmed as general purpose IO. Two least significant bits written to register 5 allows to control the state of these pins:
 
-```
+```python
 import minimalmodbus as mm
 
 instrument = mm.Instrument(SERIAL_PORT, ADDRESS)
